@@ -6,6 +6,18 @@
  * Повертає - json дані в яких всі числові значення збільшено на 1.
  */
 function complexConvert(data) {
+  let obj = new Object();
+  let jsnObj = JSON.parse(data);
+  let key = Object.keys(jsnObj);
+
+  for (const keys of key) {
+    if (typeof jsnObj[keys] === "number") {
+      obj[keys] = jsnObj[keys] + 1;
+    } else {
+      obj[keys] = jsnObj[keys];
+    }
+  }
+  return obj;
   // Створюємо новий порожній об'єкт для збереження результату.
   // Перетворюємо json дані в об'єкт та отримуємо всі ключі об'єкта.
   // Обходимо всі ключі та перевіряємо значення.
@@ -45,6 +57,12 @@ console.log(complexConvert(JSON.stringify(data)));
     params: Параметри URL у вигляді масиву пар [ключ, значення].
  */
 function manipulateUrl(url) {
+  let obj = new URL(url);
+  obj.protocol = "https";
+  obj.host = "newhost.com";
+  obj.searchParams.append("newParam", "newValue");
+  obj.searchParams.delete("oldParam");
+  return obj;
   // Створюємо новий об'єкт URL.
   // Змінюємо протокол URL на https.
   // Змінюємо хост URL на 'newhost.com'.
@@ -81,6 +99,13 @@ console.log(manipulateUrl(url));
  *  Повертає об'єкт з параметрами пошуку URL.
  */
 function searchParamsURL(url) {
+  let obj = new URL(url);
+  let dict = new Map([]);
+  let URLSearchParams = obj.searchParams.entries();
+  for (const [key, param] of URLSearchParams) {
+    dict.set(key, param);
+  }
+  return dict;
   // Створення нового об'єкта URL з вхідного рядка
   // Отримання об'єкта URLSearchParams з властивості 'searchParams' об'єкта URL
   // Створення порожнього словника для збереження параметрів пошуку
@@ -114,6 +139,12 @@ console.log(
  * Функція повертає нову URL-адресу з властивістю searchParams, оновленою за допомогою параметрів з paramsObj.
  */
 function manipulateSearchParams(paramsObj, newUrl) {
+  let objNew = new URL(newUrl);
+  let keys = Object.keys(paramsObj);
+  for (const key of keys) {
+    objNew.searchParams.append(key, paramsObj[key]);
+  }
+  return objNew.toString();
   // Створюємо новий об'єкт URL з нової URL-адреси.
   // Використовуючи метод 'keys' з об'єкта Object, отримуємо всі ключі paramsObj.
   // За допомогою циклу 'for of' перебираємо всі ключі та додаємо параметри пошуку до urlObj.
@@ -141,6 +172,11 @@ console.log(
  * Функція повертає нову URL-адресу, з якої були видалені вказані параметри пошуку.
  */
 function deleteSearchParams(keys, url) {
+  let objNew = new URL(url);
+  for (const key of keys) {
+    objNew.searchParams.delete(key);
+  }
+  return objNew.toString();
   // Створюємо новий об'єкт URL з URL-адреси.
   // За допомогою циклу 'for of' перебираємо всі ключі та видаляємо відповідні параметри пошуку з urlObj.
   // Повертаємо нову URL-адресу в рядковому форматі.
@@ -167,6 +203,12 @@ console.log(
  * Функція повертає нову URL-адресу, до якої додані параметри пошуку з об'єкта params.
  */
 function createURLWithParams(params, url) {
+  let objNew = new URL(url);
+  for (const key in params) {
+    objNew.searchParams.append(key, params[key]);
+  }
+  return objNew.toString();
+
   // Створюємо новий об'єкт URL з базової URL-адреси.
   // За допомогою циклу 'for in' перебираємо всі ключі та значення об'єкта params та додаємо їх як параметри пошуку до urlObj.
   // Повертаємо нову URL-адресу в рядковому форматі.
@@ -193,6 +235,9 @@ console.log(
  * Функція повертає нову URL-адресу з оновленим хешем.
  */
 function updateURLHash(url, hash) {
+  let objNew = new URL(url);
+  objNew.hash = hash;
+  return objNew.toString();
   // Створюємо новий об'єкт URL з вхідної URL-адреси.
   // Оновлюємо значення хеша в URL-адресі.
   // Повертаємо нову URL-адресу в рядковому форматі.
@@ -215,6 +260,9 @@ console.log(updateURLHash("https://example.com", "newHash"));
  * Функція повертає нову URL-адресу з доданим параметром пошуку.
  */
 function appendSearchParam(url, key, value) {
+  let objNew = new URL(url);
+  objNew.searchParams.append(key, value);
+  return objNew.toString();
   // Створюємо новий об'єкт URL з вхідної URL-адреси.
   // Додаємо новий параметр пошуку до URL-адреси.
   // Повертаємо нову URL-адресу в рядковому форматі.
@@ -236,6 +284,15 @@ console.log(appendSearchParam("https://example.com", "newParam", "newValue"));
  * Повертається - Нова URL-адреса з оновленими параметрами пошуку.
  */
 function modifyURLParameters(url, params) {
+  let objNew = new URL(url);
+  for (const key in params) {
+    if (params[key] === objNew.searchParams.has(key)) {
+      objNew.searchParams.set(key, params[key]);
+    } else {
+      objNew.searchParams.set(key, params[key]);
+    }
+  }
+  return objNew.toString();
   // Створюємо новий об'єкт URL з вхідної URL-адреси.
   // Перебираємо словник params за допомогою for in
   // Отримаємо значення словника по ключу
@@ -265,6 +322,16 @@ console.log(modifiedURL);
  *                    а значеннями є булеві значення, що вказують на наявність відповідного параметра в URL.
  */
 function checkURLParameters(url, params) {
+  let objNew = new URL(url);
+  let obj = Object();
+  for (const elem of params) {
+    if (objNew.searchParams.has(elem)) {
+      obj[elem] = true;
+    } else {
+      obj[elem] = false;
+    }
+  }
+  return obj;
   // Створюємо новий об'єкт URL з вхідної URL-адреси.
   // Створюємо новий об'єкт для зберігання результатів.
   // Перебираємо елементи множини params за допомогою for of.
@@ -295,6 +362,20 @@ console.log(
  * Функція повертає новий URL, який було сформовано на основі вхідного URL і параметрів обробки.
  */
 function processUrl(url, options) {
+  let objNew = new URL(url);
+  if (options.searchParams) {
+    for (const value in options.searchParams) {
+      objNew.searchParams.append(value, options.searchParams[value]);
+    }
+  }
+  if (options.protocol) {
+    objNew.protocol = options.protocol;
+  }
+  if (options.host) {
+    objNew.host = options.host;
+  }
+  return objNew.toString();
+
   // Створюємо новий об'єкт URL з вхідної URL-адреси.
   // Перевіряємо, чи в об'єкті 'options' є параметри пошуку.
   // Якщо є, перебираємо ці параметри за допомогою циклу 'for in'.
@@ -328,6 +409,18 @@ console.log(
  * Повертається - Новий URL з модифікованими пошуковими параметрами.
  */
 function manipulateQuery(url, options) {
+  let objNew = new URL(url);
+  if (options.has(`append`)) {
+    for (const [key, value] of options.get(`append`)) {
+      objNew.searchParams.append(key, value);
+    }
+  }
+  if (options.has(`delete`)) {
+    for (const key of options.get(`delete`)) {
+      objNew.searchParams.delete(key);
+    }
+  }
+  return objNew.toString();
   // Створюємо новий об'єкт URL з вхідної URL-адреси.
   // Якщо в словнику `options` є ключ `append`...
   // ...перебираємо його ключі та значення за допомогою циклу for...of.
@@ -374,6 +467,15 @@ console.log(
  * - 'password': пароль в URL.
  */
 function getUrlData(url) {
+  let newObj = new URL(url);
+  let obj = Object();
+  obj["origin"] = newObj.origin;
+  obj["hostname"] = newObj.hostname;
+  obj["port"] = newObj.port;
+  obj["username"] = newObj.username;
+  obj["password"] = newObj.password;
+  return obj;
+
   // Створюємо новий об'єкт URL з вхідної URL-адреси.
   // Повертаємо об'єкт з відповідними даними.
 }
@@ -399,6 +501,17 @@ console.log(getUrlData("https://username:password@example.com:8080/path"));
  * Функція повертає новий URL з відсортованими пошуковими параметрами за ключами у порядку зростання.
  */
 function sortUrlParams(url) {
+  let objNew = new URL(url);
+  let keys = Array.from(objNew.searchParams.entries());
+  keys = keys.sort();
+  for (const [value, key] of keys) {
+    objNew.searchParams.delete(value);
+  }
+  for (const [value, key] of keys) {
+    objNew.searchParams.append(key, value);
+  }
+  return objNew.toString();
+
   // Створюємо новий об'єкт URL з вхідної URL-адреси.
   // Отримуємо масив з ключами і значеннями параметрів за допомогою методу 'entries'.
   // Сортуємо масив за ключами у порядку зростання.
@@ -422,6 +535,14 @@ console.log(
  * Повертаємо - Масив значень пошукових параметрів.
  */
 function getURLValues(url) {
+  let objNew = new URL(url);
+  let URLSearchParams = objNew.searchParams.entries();
+  let newArr = Array.from(objNew.searchParams.keys());
+  let newArr2 = [];
+  for (const [key, value] of URLSearchParams) {
+    newArr2[key] = value;
+  }
+  return newArr2;
   // Створюємо новий об'єкт URL з вхідною URL-адресою.
   // Отримуємо об'єкт `URLSearchParams` з пошуковими параметрами.
   // Отримуємо масив ключів пошукових параметрів.
@@ -449,6 +570,12 @@ console.log(
  * Функція повертає масив, що містить усі ключі пошукових параметрів.
  */
 function getUrlKeys(url) {
+  let objNew = new URL(url);
+  let arrnew = Array.from(objNew.searchParams.keys());
+  for (const [key, value] of arrnew) {
+    objNew[key] = value;
+  }
+  return arrnew;
   // Створюємо новий об'єкт URL з вхідної URL-адреси.
   // Отримуємо масив зі всіма ключами пошукових параметрів за допомогою методу 'keys'.
   // Повертаємо масив з ключами.
